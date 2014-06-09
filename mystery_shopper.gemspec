@@ -15,7 +15,9 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.9.3'
 
   s.add_dependency 'nokogiri'
+  s.add_development_dependency 'minitest-stub_any_instance'
+  s.add_development_dependency 'mocha'
 
-  s.files = ["{lib}/**/*"]
+  s.files = Dir.glob("{lib}/**/*")
   s.require_paths = ["lib"]
 end
