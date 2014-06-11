@@ -1,4 +1,4 @@
-require 'common_includes'
+require 'common_helpers'
 
 describe MysteryShopper::Item do
   before do

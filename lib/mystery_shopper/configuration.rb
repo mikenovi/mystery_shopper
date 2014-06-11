@@ -1,6 +1,6 @@
 module MysteryShopper
   class Source
-    attr_accessor :name, :product_listing, :product_preview, :product
+    attr_accessor :name, :product_listing, :product_preview, :product, :search_url
   end
 
   class Configuration

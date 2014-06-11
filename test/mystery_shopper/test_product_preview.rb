@@ -1,4 +1,4 @@
-require 'common_includes'
+require 'common_helpers'
 
 describe MysteryShopper::ProductPreview do
 end
