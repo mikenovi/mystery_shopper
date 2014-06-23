@@ -14,9 +14,9 @@ module MysteryShopper
         listing.parse response.body
         listing
       else
-        raise IOError "request timed out" if response.timed_out?
-        raise IOError "no HTTP response" if response.code == 0
-        raise IOError "failed HTTP request with response #{response.code.to_s}"
+        raise IOError.new "request timed out" if response.timed_out?
+        raise IOError.new "no HTTP response" if response.code == 0
+        raise IOError.new "failed HTTP request with response #{response.code.to_s}"
       end
 		end
 

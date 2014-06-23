@@ -12,26 +12,23 @@ describe MysteryShopper::Listing do
 	
 		it "parses no records" do
 			@listing.instance_variable_set :@product_list_definition, 'li.no_product'
+			@listing.expects(:parse_preview).never
 			
-			@listing.stub :parse_preview, "Product Preview" do
-			 	@listing.parse(@doc).count.must_equal 0
-			end
+			@listing.parse(@doc).count.must_equal 0
 		end
 
 		it "parses one records" do
 			@listing.instance_variable_set :@product_list_definition, 'li.unique'
-
-			@listing.stub :parse_preview, "Product Preview" do
-			 	@listing.parse(@doc).count.must_equal 1
-			end
+			@listing.expects(:parse_preview).once
+			
+			@listing.parse(@doc).count.must_equal 1
 		end
 
 		it "returns multiple records" do
 			@listing.instance_variable_set :@product_list_definition, 'li.product'
+			@listing.expects(:parse_preview).times(3)
 
-			@listing.stub :parse_preview, "Product Preview" do
-			 	@listing.parse(@doc).count.must_equal 3
-			end
+			@listing.parse(@doc).count.must_equal 3
 		end
 	end
 
