@@ -27,7 +27,7 @@ module MysteryShopper
 				return @must_be_present ? raise(NameError, "Element '#{@identifier}' could not be found.") : nil
 			end
 				
-			value = @attribute == 'content' ? element.content() : element.attr(@attribute)
+			value = @attribute == 'content' ? element.inner_html : element.attr(@attribute)
 			if value.nil? || value.strip.empty?
 				return @must_be_present ? raise(NameError, "Value for '#{@identifier}' '#{@attribute}' could not be found.") : nil
 			end

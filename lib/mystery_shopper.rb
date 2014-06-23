@@ -1,4 +1,5 @@
 require 'mystery_shopper/detail_definition_entry'
+require 'mystery_shopper/key_value_detail_definition_entry'
 require 'mystery_shopper/listing'
 require 'mystery_shopper/item'
 require 'mystery_shopper/configuration'
