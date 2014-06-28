@@ -1,6 +1,24 @@
 require 'common_helpers'
 
 describe MysteryShopper::DetailDefinitionEntry do
+	describe "create" do
+
+		it "creates a detail definition entry when data type is not specified" do
+			@test_detail  = MysteryShopper::DetailDefinitionEntry.create :test, { :identifier => :test_tag }
+			@test_detail.must_be_instance_of MysteryShopper::DetailDefinitionEntry
+		end
+
+		it "creates a detail definition entry when data type is not found" do
+			@test_detail  = MysteryShopper::DetailDefinitionEntry.create :test, { :identifier => :test_tag, :data_type => 'Integer' }
+			@test_detail.must_be_instance_of MysteryShopper::DetailDefinitionEntry
+		end
+
+		it "creates a specific detail definition type when a valid data type is specified" do
+			@test_detail  = MysteryShopper::DetailDefinitionEntry.create :test, { :identifier => :test_tag, :data_type => :key_value, :key => "something", :value => "something_else" }
+			@test_detail.must_be_instance_of MysteryShopper::KeyValueDetailDefinitionEntry
+		end
+	end
+
 	describe "initialize" do
 		it "accepts identifier" do
 			@test_detail = MysteryShopper::DetailDefinitionEntry.new :test, { :identifier => :test_tag }
@@ -26,7 +44,7 @@ describe MysteryShopper::DetailDefinitionEntry do
 		end
 
 		it "overrides data type with valid data class" do
-			@test_detail = MysteryShopper::DetailDefinitionEntry.new :test, { :identifier => :test_tag, :data_type => 'Float' }
+			@test_detail = MysteryShopper::DetailDefinitionEntry.new :test, { :identifier => :test_tag, :data_type => Float }
 			@test_detail.data_type.must_equal Float
 		end
 
@@ -59,6 +77,11 @@ describe MysteryShopper::DetailDefinitionEntry do
 		it "returns nil if element does not exits" do
 			@test_detail =  MysteryShopper::DetailDefinitionEntry.new 'content_test', {:identifier => 'div.no_product'}
 			@test_detail.get_value(@doc).must_be_nil
+		end
+
+		it "transforms the value with value transform function" do
+			@test_detail =  MysteryShopper::DetailDefinitionEntry.new 'content_test', {:identifier => 'div.product', :value_transform => lambda { |value| "Transformed #{value}" } }
+			@test_detail.get_value(@doc).must_equal "Transformed Test Product"
 		end
 
 		describe "must be present" do

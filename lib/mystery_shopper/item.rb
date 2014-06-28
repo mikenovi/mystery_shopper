@@ -9,13 +9,15 @@ module MysteryShopper
       @definitions.each do |detail|
         self.instance_variable_set("@#{detail.name}", detail.get_value(content))
       end
+
+      self
     end
 
     protected
     def load_definition(def_hash)
       @definitions = []
       def_hash.each do |key, details|
-        @definitions << DetailDefinitionEntry.new(key, details)
+        @definitions << DetailDefinitionEntry.create(key, details)
       end       
     end
   end

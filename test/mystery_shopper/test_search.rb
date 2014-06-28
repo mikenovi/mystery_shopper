@@ -3,7 +3,7 @@ require 'common_helpers'
 describe MysteryShopper::Search do
   before do
     MysteryShopper::Configuration.configure do |config|
-      config.test_source.search_url = "http://search.example.com?page=%%page%%"
+      config.test_source.search_url = "http://search.example.com?search_term=%%search_term%%&page=%%page%%"
     end
   end
 
@@ -19,9 +19,9 @@ describe MysteryShopper::Search do
   end
 
   describe "construct url" do
-    it "constructs the search URL with stepped page number" do
+    it "constructs the search URL with encoded search term and page number" do
       search = MysteryShopper::Search.new('test_source')
-      search.send(:construct_search_url, 5).must_equal "http://search.example.com?page=5"
+      search.send(:construct_search_url, "Search Term", 5).must_equal "http://search.example.com?search_term=Search+Term&page=5"
     end
   end
 
@@ -35,10 +35,10 @@ describe MysteryShopper::Search do
       response = Typhoeus::Response.new(code: 200, body: search_response_body)
       Typhoeus.stub(search_url).and_return(response)
 
-      MysteryShopper::Listing.any_instance().expects(:parse).with(search_response_body)
+      MysteryShopper::Listing.any_instance().expects(:parse).with(search_response_body).returns(["Object 1", "Object 2", "Object 3"])
 
       response = search.perform_search('search_term', 3)
-      response.must_be_kind_of MysteryShopper::Listing
+      response.must_be_kind_of Array
     end
   end
 end

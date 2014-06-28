@@ -11,7 +11,7 @@ module MysteryShopper
 
 		def parse(content)
 			products_list = Nokogiri::HTML(content).css(@product_list_definition)
-			products_list.map { |p| parse_preview p.content() }
+			products_list.map { |p| parse_preview p.inner_html() }
 		end
 
 		def parse_preview(content)

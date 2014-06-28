@@ -9,7 +9,7 @@ module MysteryShopper
 		end
 
 		def load(url)
-			response = Typhoeus.get(url, followlocation: true)
+			response = Typhoeus.get(url, { followlocation: true }.merge(MysteryShopper::Configuration.config.send(@source).curl_options))
       if response.success?
         self.parse(response.body)
       else

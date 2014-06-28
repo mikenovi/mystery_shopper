@@ -1,6 +1,10 @@
 module MysteryShopper
   class Source
-    attr_accessor :name, :product_listing, :product_preview, :product, :search_url
+    attr_accessor :name, :product_listing, :product_preview, :product, :search_url, :curl_options
+
+    def initialize
+      self.curl_options ||= {}
+    end
   end
 
   class Configuration

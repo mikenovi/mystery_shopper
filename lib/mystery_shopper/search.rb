@@ -1,3 +1,4 @@
+require 'uri'
 require 'typhoeus'
 
 module MysteryShopper
@@ -8,11 +9,10 @@ module MysteryShopper
 		end
 
 		def perform_search(search_term, page=1)
-			response = Typhoeus.get(self.construct_search_url(page), followlocation: true)
+      response = Typhoeus.get(self.construct_search_url(search_term, page), { followlocation: true }.merge(MysteryShopper::Configuration.config.send(@source).curl_options))
       if response.success?
         listing = MysteryShopper::Listing.new @source
         listing.parse response.body
-        listing
       else
         raise IOError.new "request timed out" if response.timed_out?
         raise IOError.new "no HTTP response" if response.code == 0
@@ -21,8 +21,8 @@ module MysteryShopper
 		end
 
     protected
-    def construct_search_url(page=1)
-      MysteryShopper::Configuration.config.send(@source).search_url.gsub(/%%page%%/, page.to_s)
+    def construct_search_url(search_term, page=1)
+      MysteryShopper::Configuration.config.send(@source).search_url.gsub(/%%search_term%%/, URI::encode_www_form_component(search_term)).gsub(/%%page%%/, page.to_s)
     end
 	end
 end
