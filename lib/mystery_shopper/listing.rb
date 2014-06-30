@@ -16,7 +16,7 @@ module MysteryShopper
 
 		def parse_preview(content)
 			begin
-				return ProductPreview.new(MysteryShopper::Configuration.config.send(@source).send(@@product_preview_definition_key)).parse(content)
+				return ProductPreview.new(Configuration.config.send(@source).send(@@product_preview_definition_key)).parse(content)
 			rescue NameError
 				return nil
 			end
@@ -24,7 +24,7 @@ module MysteryShopper
 
 		protected
 		def load_definition
-			@product_list_definition = MysteryShopper::Configuration.config.send(@source).send(@@product_listing_definition_key)
+			@product_list_definition = Configuration.config.send(@source).send(@@product_listing_definition_key)
 		end
 	end
 end

@@ -5,8 +5,8 @@ module MysteryShopper
 		attr_accessor :name, :identifier, :data_type, :attribute, :must_be_present, :value_transform
 
 		def self.create(name, details)
-			if !!details[:data_type] && details[:data_type].class.method_defined?(:to_s) && Object.const_defined?("MysteryShopper::#{details[:data_type].to_s.split('_').map(&:capitalize).join}DetailDefinitionEntry")
-				dde = Object.const_get("MysteryShopper::#{details[:data_type].to_s.split('_').map(&:capitalize).join}DetailDefinitionEntry").new(name, details)
+			if !!details[:data_type] && details[:data_type].class.method_defined?(:to_s) && Object.const_defined?("::MysteryShopper::#{details[:data_type].to_s.split('_').map(&:capitalize).join}DetailDefinitionEntry")
+				dde = Object.const_get("::MysteryShopper::#{details[:data_type].to_s.split('_').map(&:capitalize).join}DetailDefinitionEntry").new(name, details)
 			else
 				dde = DetailDefinitionEntry.new(name, details)
 			end
