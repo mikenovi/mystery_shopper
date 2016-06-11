@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'typhoeus'
   s.add_development_dependency 'minitest-stub_any_instance'
   s.add_development_dependency 'mocha'
+  s.add_development_dependency 'byebug'
 
   s.files = Dir.glob("{lib}/**/*")
   s.require_paths = ["lib"]

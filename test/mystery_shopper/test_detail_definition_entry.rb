@@ -35,7 +35,7 @@ describe MysteryShopper::DetailDefinitionEntry do
 			end
 
 			it "defaults to text attribute" do
-				@test_detail.attribute.must_equal "content"
+				@test_detail.attribute.must_equal nil
 			end
 
 			it "defaults to not needing to be present" do

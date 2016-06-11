@@ -1,6 +1,10 @@
 require 'common_helpers'
 
 describe MysteryShopper::Configuration do
+  before (:each) do
+    Singleton.send(:__init__, MysteryShopper::Configuration)
+  end
+
   describe "config" do
     it "creates a singleton" do
       config_1 = MysteryShopper::Configuration.config

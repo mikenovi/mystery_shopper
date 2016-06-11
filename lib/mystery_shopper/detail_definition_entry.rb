@@ -27,7 +27,7 @@ module MysteryShopper
 
 			# Convert data type to class
 			@data_type = (!!details[:data_type] && details[:data_type].is_a?(Class)) ? details[:data_type] : String
-			@attribute = !!details[:attr] ? details[:attr].to_s : 'content'
+			@attribute = !!details[:attr] ? details[:attr].to_s : nil
 			@must_be_present = details[:must_be_present] == true
 			@value_transform = details[:value_transform]
 		end
@@ -38,9 +38,9 @@ module MysteryShopper
 				return @must_be_present ? raise(NameError, "Element '#{@identifier}' could not be found.") : nil
 			end
 				
-			value = @attribute == 'content' ? element.inner_html : element.attr(@attribute)
+			value = @attribute.nil? ? element.inner_html : element.attr(@attribute)
 			if value.nil? || value.strip.empty?
-				return @must_be_present ? raise(NameError, "Value for '#{@identifier}' '#{@attribute}' could not be found.") : nil
+				return @must_be_present ? raise(NameError, "Value for '#{@identifier}' could not be found.") : nil
 			end
 
 			!!@value_transform ? @value_transform.call(value) : value

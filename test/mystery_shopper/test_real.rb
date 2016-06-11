@@ -4,21 +4,28 @@ describe MysteryShopper::Search do
   describe "Lowes" do
     before do
       MysteryShopper::Configuration.configure do |config|
-        config.lowes.search_url = "http://www.lowes.com/Search=%%search_term%%?storeId=10151&langId=-1&catalogId=10051&N=0&Ntt=%%search_term%%#!&rpp=10&page=%%page%%"
-        config.lowes.curl_options = { cookie: "selectedStore1=Lowe's Of S Durham## NC|2778|0|27713|no|Y|4402 Fayetteville Road|Durham|Mon-Sat 6 Am - 10 Pm## Sun 8 Am - 8 Pm|(919) 206-4800|(919) 206-4801|KE" }
-        config.lowes.product_listing = "ul#productResults > li"
+        config.lowes.search_url = "http://www.lowes.com/search?searchTerm=%%search_term%%"
+        config.lowes.curl_options = { cookie: "sn=2313" }
+        #, proxy: "http://proxy-us1.vpnsecure.me:8080", :proxyuserpwd => "#{ENV['VPN_SECURE_USERNAME']}:#{ENV['VPN_SECURE_PASSWORD']}" }
+        config.lowes.product_listing = "ul > li.product-wrapper"
         config.lowes.product_preview = { 
-          :name => { :identifier => "h3.productTitle > a", :must_be_present => true },
-          :detail_url => { :identifier => "h3.productTitle > a", :attr => "href", :must_be_present => true, :value_transform => lambda { |value| "http://www.lowes.com#{value}" } },
-          :image_url => { :identifier => "img.productImg", :attr => "src" },
-          :price => { :identifier => "p.pricing strong" },
+          :name => { :identifier => "p.product-title", :must_be_present => true, :value_transform => lambda { |value| value.strip } },
+          :detail_url => { :identifier => "a", :attr => "href", :must_be_present => true, :value_transform => lambda { |value| "http://www.lowes.com#{value}" } },
+          :image_url => { :identifier => "img.product-image", :attr => "data-src" },
+          :price => { :identifier => "span.js-price" },
         }
         config.lowes.product = {
-          :name => { :identifier => "div#descCont > div.itemInfo > h1", :must_be_present => true},
-          :price => { :identifier => "div#descCont div.pricingDetails div#pricing span.price"},
-          :image_url => { :identifier => "div#imgCont img#prodPrimaryImg", :attr => "src" },
-          :specifications => { :identifier => "div#specifications-tab", :data_type => :key_value, :key => 'td:nth-child(odd)', :value => 'td:nth-child(even)' },
-          :description => { :identifier => "div#description-tab" }
+          :name => { :identifier => "div.pd-title > h1", :must_be_present => true, :value_transform => lambda { |value| value.strip }},
+          :price => { :identifier => "span[itemprop='price']", :attr => "content"},
+          :image_url => { :identifier => "img.product-image", :attr => "src" },
+          :specifications => { :identifier => "div#collapseSpecs", :data_type => :key_value, :key => 'tr > th', :value => 'tr > td > span' },
+          :description => { :identifier => "div#collapseDesc", :value_transform => lambda { |value| 
+            content = Nokogiri::HTML(value)
+            paragraph = content.at_css('p') ? content.at_css('p').text().strip + "\n\n" : ""
+            list = content.css('li').map { |li| " * #{li.text().strip}" }.join("\n")
+            paragraph + list
+            } 
+          }
         }
       end
     end
@@ -53,6 +60,7 @@ describe MysteryShopper::Search do
 
   describe "Home Depot" do
     before do
+      skip "must reimplement Home Depot reader"
       MysteryShopper::Configuration.configure do |config|
         config.homedepot.search_url = "http://www.homedepot.com/s/%%search_term%%"
         config.homedepot.product_listing = "div#products > div.product"

@@ -80,7 +80,7 @@ describe MysteryShopper::Item do
       }
 
       err = ->{ @item.parse(test_record) }.must_raise NameError
-      err.message.must_equal "Value for '#name' 'content' could not be found."
+      err.message.must_equal "Value for '#name' could not be found."
     end
   end
 end
